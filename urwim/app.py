@@ -8,6 +8,7 @@ import urwid
 
 from .command_handler import *
 from .command_panel import *
+from .helpers import *
 from .input_state_machine import *
 from .rdb import *
 from .window import *
@@ -17,8 +18,9 @@ class App:
     _instance = None
 
     class _App(urwid.MainLoop):
-        def __init__(self, widget, commands=None, keys_mapping=None, command_mapping={}, palette=None):
+        def __init__(self, widget, commands=None, keys_mapping=None, command_mapping={}, palette=None, log_exceptions=False):
             widget = widget if widget else urwid.ListBox([])
+            self._log_exceptions = log_exceptions
             self._hack_urwid_asyncio()
             self._draw_lock = threading.RLock()
             self._event_loop = urwid.AsyncioEventLoop(loop=asyncio.get_event_loop())
@@ -53,6 +55,8 @@ class App:
             except urwid.ExitMainLoop:
                 raise
             except Exception as e:
+                if self._log_exceptions:
+                    log_exception(self.logger)
                 self._command_panel.error(str(e))
 
         def draw_screen(self, *args, **kwargs):
