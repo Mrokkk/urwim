@@ -33,7 +33,7 @@ def _create_palette(palette):
 
 
 def read_config(config_files=[], defaults={}):
-    defaults = {
+    _defaults = {
         'colors': 256,
         'color_palette': [
             ('head', 'yellow', 'black', '', '#a30', ''),
@@ -66,6 +66,12 @@ def read_config(config_files=[], defaults={}):
         def __repr__(self):
             return str(self.__dict__)
 
+        def __contains__(self, i):
+            return i in self.__dict__
+
+        def __getitem__(self, key):
+            return self.__dict__[key]
+
     def _read_config(config_files):
         if not config_files: return
         for config_file in config_files:
@@ -78,7 +84,7 @@ def read_config(config_files=[], defaults={}):
                 logging.debug('Reading JSON from {}'.format(config_file))
                 return JsonConfigReader().read(config_file)
 
-    config_dict = defaults.copy()
+    config_dict = _defaults.copy()
     if defaults:
         config_dict.update(defaults)
     config_from_file = _read_config(config_files)
@@ -88,6 +94,6 @@ def read_config(config_files=[], defaults={}):
     logging.debug(config)
     # FIXME: make the following more generic
     try: config.color_palette = _create_palette(config_dict['palette'])
-    except: config.color_palette = defaults['color_palette']
+    except: config.color_palette = _defaults['color_palette']
     return config
 

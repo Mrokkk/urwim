@@ -18,17 +18,21 @@ class App:
     _instance = None
 
     class _App(urwid.MainLoop):
-        def __init__(self, widget, commands=None, keys_mapping=None, command_mapping={}, palette=None, log_exceptions=False):
+        def __init__(self, widget, config, commands=None, log_exceptions=False):
+            commands_mapping = config.commands_mapping.__dict__ if 'commands_mapping' in config else {}
+            keys_mapping = config.keys_mapping.__dict__ if 'keys_mapping' in config else {}
+            palette = config.color_palette
             widget = widget if widget else urwid.ListBox([])
             self._log_exceptions = log_exceptions
             self._hack_urwid_asyncio()
             self._draw_lock = threading.RLock()
             self._event_loop = urwid.AsyncioEventLoop(loop=asyncio.get_event_loop())
-            self._command_handler = CommandHandler(commands, command_mapping)
+            self._command_handler = CommandHandler(commands, commands_mapping)
             self._command_panel = CommandPanel(self._command_handler)
             self._window = Window(widget, self._command_panel)
             self._sm = InputStateMachine(keys_mapping)
             self.logger = logging.getLogger('App')
+            rdb['config'] = config
             super().__init__(self._window,
                 palette=palette,
                 unhandled_input=self._handle_input,

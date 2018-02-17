@@ -15,7 +15,7 @@ class CommandHandler:
         SEARCH_FORWARD = '/'
         SEARCH_BACKWARD = '?'
 
-    def __init__(self, commands, command_mapping):
+    def __init__(self, commands, commands_mapping):
         self.commands = commands if commands else Commands()
         self.mode_map = {
             self.Mode.COMMAND: self._command_mode,
@@ -25,7 +25,7 @@ class CommandHandler:
         self.command_mapping = {
             'q': 'quit',
             'qa': 'quit',
-            **command_mapping
+            **commands_mapping
         }
         self.logger = logging.getLogger('CommandHandler')
         self._search_context = None
