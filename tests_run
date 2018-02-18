@@ -4,6 +4,11 @@ import logging
 import unittest
 
 from test.rdb_tests import *
+from test.completer_tests import *
+from test.command_panel_tests import *
+from test.command_handler_tests import *
+from test.config_tests import *
+from test.user_input_tests import *
 
 if __name__ == '__main__':
     logging.basicConfig(stream=unittest.mock.Mock())
