@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import urwid
+from .widget import *
 from .wrapper import *
 from .tabs_panel import *
 
-class TabsContainer(urwid.WidgetPlaceholder, Wrapper):
+class TabsContainer(urwid.WidgetPlaceholder, Wrapper, Widget):
 
     def __init__(self, widget_list):
         self._tabs = widget_list

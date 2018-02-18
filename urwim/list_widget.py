@@ -2,8 +2,9 @@
 
 import urwid
 from .helpers import *
+from .widget import *
 
-class ListWidget(urwid.ListBox):
+class ListWidget(urwid.ListBox, Widget):
 
     def __init__(self, content, readonly=False):
         self._readonly = readonly
@@ -70,4 +71,7 @@ class ListWidget(urwid.ListBox):
     def delete(self):
         if self.readonly(): raise RuntimeError('this widget does not support removing items')
         del self.body[self.focus_position]
+
+    def searchable_list(self):
+        return self
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import urwid
+from .list_widget import *
 from .tabs_container import *
 from .vertical_box import *
 from .wrapper import *
@@ -8,9 +9,11 @@ from .wrapper import *
 class Window(urwid.WidgetWrap, Wrapper):
 
     def __init__(self, main_view, command_panel):
-        self.main_view = main_view if main_view else urwid.ListBox([])
+        self._main_view = main_view if main_view else ListWidget([])
+        if not issubclass(self._main_view.__class__, Widget):
+            raise TypeError('widget must be a subclass of Widget')
         self._command_panel = command_panel
-        self._tabs_container = TabsContainer([main_view])
+        self._tabs_container = TabsContainer([self._main_view])
         super().__init__(urwid.Frame(self._tabs_container, footer=self._command_panel))
 
     def add_tab(self, w):

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import urwid
-from .list_widget import *
+from .widget import *
 
-class ViewWidget(urwid.Frame):
+class ViewWidget(urwid.Frame, Widget):
 
-    def __init__(self, widget, callbacks, name, header=None):
+    def __init__(self, widget, name, callbacks={}, header=None):
         self._callbacks = callbacks
         self._widget = widget
         self._name = name
@@ -16,8 +16,7 @@ class ViewWidget(urwid.Frame):
             self._callbacks[key]()
 
     def searchable_list(self):
-        if self._widget.__class__ == ListWidget: return self._widget
-        raise NotImplementedError('view does not support searching')
+        return self._widget.searchable_list()
 
     @property
     def name(self):

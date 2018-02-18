@@ -6,8 +6,10 @@ import signal
 import threading
 import urwid
 
+from .asynchronous import *
 from .command_handler import *
 from .command_panel import *
+from .commands import *
 from .helpers import *
 from .input_state_machine import *
 from .rdb import *
@@ -19,10 +21,10 @@ class App:
 
     class _App(urwid.MainLoop):
         def __init__(self, widget, config, commands=None, log_exceptions=False):
+            commands = Commands() if commands is None else commands
             commands_mapping = config.commands_mapping.__dict__ if 'commands_mapping' in config else {}
             keys_mapping = config.keys_mapping.__dict__ if 'keys_mapping' in config else {}
             palette = config.color_palette
-            widget = widget if widget else urwid.ListBox([])
             self._log_exceptions = log_exceptions
             self._hack_urwid_asyncio()
             self._draw_lock = threading.RLock()
@@ -53,7 +55,7 @@ class App:
 
         def _handle_input(self, key):
             try:
-                if not isinstance(key, tuple):
+                if not isinstance(key, tuple) and not self._command_panel.is_active():
                     if self._sm.handle_key(key): return
                 self._window.handle_input(key)
             except urwid.ExitMainLoop:

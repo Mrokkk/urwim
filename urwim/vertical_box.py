@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-import logging
 import urwid
 from .footer import *
 from .helpers import *
 from .separators import *
+from .widget import *
 from .wrapper import *
 
-class VerticalBox(urwid.WidgetPlaceholder, Wrapper):
+class VerticalBox(urwid.WidgetPlaceholder, Wrapper, Widget):
 
     def __init__(self, widget_list):
         self._widgets = []

@@ -3,8 +3,8 @@
 import os
 import logging
 from .helpers import log_exception
-from .yaml_config_reader import YamlConfigReader
-from .json_config_reader import JsonConfigReader
+from .config_readers.yaml_config_reader import YamlConfigReader
+from .config_readers.json_config_reader import JsonConfigReader
 
 def _convert_color(color):
     if isinstance(color, int):
@@ -46,7 +46,7 @@ def read_config(config_files=[], defaults={}):
             ('info', 'dark cyan', '', '', '#06f', ''),
             ('separator', 'black', 'black', '', 'g16', ''),
             ('tab_inactive', '', '', '', '', ''),
-            ('tab_active', 'black', 'blue', '', '#000', '#0ad'),
+            ('tab_active', 'black', '', '', '#000', '#0ad'),
         ]
     }
 
