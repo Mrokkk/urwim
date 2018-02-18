@@ -1,0 +1,27 @@
+# .coveragerc
+[run]
+branch = True
+omit =
+    */.local/*
+    /usr/*
+    */__init__.py
+    test/*
+    tests_run
+source = urwim
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self\.debug
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+
+ignore_errors = True
+
+[html]
+directory = htmlcov
+
+# vim: set filetype=dosini
