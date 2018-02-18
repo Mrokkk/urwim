@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+import logging
+import unittest
+
+from test.rdb_tests import *
+
+if __name__ == '__main__':
+    logging.basicConfig(stream=unittest.mock.Mock())
+    unittest.main()
+

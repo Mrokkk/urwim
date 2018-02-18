@@ -2,10 +2,13 @@
 
 import logging
 
-class Value:
+class RdbObject:
 
-    def __init__(self, value=None):
+    def __init__(self, value, min_value=None, max_value=None, readonly=False):
         self._value = value
+        self._min = min_value
+        self._max = max_value
+        self._readonly = readonly
 
     @property
     def value(self):
@@ -13,24 +16,11 @@ class Value:
 
     @value.setter
     def value(self, value):
-        self._vaule = value
-
-
-class ConstrainedValue(Value):
-
-    def __init__(self, value, min=None, max=None):
-        self._min = min
-        self._max = max
-        super().__init__(value)
-
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
-    def value(self, value):
-        if (value < self._min) or (value > self._max):
-            raise RuntimeError('exceeded constraints')
+        if self._readonly: raise RuntimeError('this object is readonly')
+        if self._min is not None:
+            if value < self._min: raise RuntimeError('exceeded constraints')
+        if self._max is not None:
+            if value > self._max: raise RuntimeError('exceeded constraints')
         self._value = value
 
 
@@ -45,8 +35,8 @@ class Rdb(dict):
         return super().__getitem__(key).value
 
     def _handle_change(self, key, old, new):
-        if isinstance(old, Value): old = old.value
-        if isinstance(new, Value): new = new.value
+        if isinstance(old, RdbObject): old = old.value
+        if isinstance(new, RdbObject): new = new.value
         self.logger.info('{}: {} -> {}'.format(key, old, new))
         if key in self._subscriptions:
             for sub in self._subscriptions[key]:
@@ -57,11 +47,11 @@ class Rdb(dict):
             old_value = super().__getitem__(key)
         except: old_value = None
         if old_value == None:
-            if not isinstance(value, Value):
-                value = Value(value)
+            if not isinstance(value, RdbObject):
+                value = RdbObject(value)
             super().__setitem__(key, value)
         else:
-            if isinstance(value, Value):
+            if isinstance(value, RdbObject):
                 super().__setitem__(key, value)
             else:
                 old_value.value = value

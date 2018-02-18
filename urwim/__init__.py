@@ -9,7 +9,7 @@ from .header import *
 from .helpers import *
 from .list_widget import *
 from .listbox_entry import *
-from .rdb import rdb, ConstrainedValue, Value
+from .rdb import rdb, RdbObject
 from .tabs_container import *
 from .vertical_box import *
 from .view_widget import *
