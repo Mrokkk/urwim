@@ -37,7 +37,7 @@ class Rdb(dict):
     def _handle_change(self, key, old, new):
         if isinstance(old, RdbObject): old = old.value
         if isinstance(new, RdbObject): new = new.value
-        self.logger.info('{}: {} -> {}'.format(key, old, new))
+        self.logger.debug('{}: {} -> {}'.format(key, old, new))
         if key in self._subscriptions:
             for sub in self._subscriptions[key]:
                 sub(new)

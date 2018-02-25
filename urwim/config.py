@@ -91,7 +91,6 @@ def read_config(config_files=[], defaults={}):
     if config_from_file:
         config_dict.update(config_from_file)
     config = Config(config_dict)
-    logging.debug(config)
     # FIXME: make the following more generic
     try: config.color_palette = _create_palette(config_dict['palette'])
     except: config.color_palette = _defaults['color_palette']

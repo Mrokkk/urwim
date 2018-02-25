@@ -27,14 +27,14 @@ class App:
             palette = config.color_palette
             self._log_exceptions = log_exceptions
             self._hack_urwid_asyncio()
-            self._draw_lock = threading.RLock()
+            self._draw_lock = threading.Lock()
             self._event_loop = urwid.AsyncioEventLoop(loop=asyncio.get_event_loop())
             self._command_handler = CommandHandler(commands, commands_mapping)
             self._command_panel = CommandPanel(self._command_handler)
             self._window = Window(widget, self._command_panel)
             self._sm = InputStateMachine(keys_mapping)
             self.logger = logging.getLogger('App')
-            rdb['config'] = config
+            rdb['config'] = RdbObject(config, readonly=True)
             super().__init__(self._window,
                 palette=palette,
                 unhandled_input=self._handle_input,
