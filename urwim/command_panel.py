@@ -3,6 +3,7 @@
 import urwid
 from .helpers import clamp
 from .completer import *
+from .pdb import *
 
 class CommandPanel(urwid.Edit):
 
@@ -12,11 +13,15 @@ class CommandPanel(urwid.Edit):
         self.mode = None
         self.history_index = None
         self.activation_keys = (':', '/', '?')
-        self.history = {
-            self.activation_keys[0]: [],
-            self.activation_keys[1]: [],
-            self.activation_keys[2]: [],
-        }
+        if not 'cmd_history' in pdb:
+            pdb['cmd_history'] = {
+                self.activation_keys[0]: [],
+                self.activation_keys[1]: [],
+                self.activation_keys[2]: [],
+            }
+        for key in self.activation_keys:
+            if not key in pdb['cmd_history']:
+                pdb['cmd_history'][key] = []
         self.history_index = -1
         self.completer = Completer(self.command_handler.list_commands(), self)
         self.completer_context = None
@@ -49,18 +54,18 @@ class CommandPanel(urwid.Edit):
         self.deactivate()
 
     def _update_panel(self):
-        self.set_edit_text(self.history[self.mode][self.history_index])
+        self.set_edit_text(pdb['cmd_history'][self.mode][self.history_index])
         self.set_edit_pos(len(self.edit_text))
 
     def _handle_enter(self):
-        self.history[self.mode].insert(0, self.get_edit_text().strip())
+        pdb['cmd_history'][self.mode].insert(0, self.get_edit_text().strip())
         self.command_handler(self.caption + self.get_edit_text().strip())
         if self.is_active(): self.clear()
 
     def _handle_up_arrow(self):
         try:
             self.history_index += 1
-            self.history_index = clamp(self.history_index, max_val=len(self.history[self.mode])-1)
+            self.history_index = clamp(self.history_index, max_val=len(pdb['cmd_history'][self.mode])-1)
             self._update_panel()
         except: pass
         return True

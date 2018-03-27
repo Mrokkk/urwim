@@ -12,6 +12,7 @@ from .command_panel import *
 from .commands import *
 from .helpers import *
 from .input_state_machine import *
+from .pdb import *
 from .rdb import *
 from .window import *
 
@@ -97,6 +98,7 @@ class App:
 
         def quit(self):
             self.logger.info('Exitting')
+            pdb.save()
             raise urwid.ExitMainLoop()
 
     def __new__(a, *args, **kwargs):

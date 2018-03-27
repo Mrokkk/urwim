@@ -9,6 +9,7 @@ from .header import *
 from .helpers import *
 from .list_widget import *
 from .listbox_entry import *
+from .pdb import pdb, read_persistent_data
 from .rdb import rdb, RdbObject
 from .tabs_container import *
 from .vertical_box import *
