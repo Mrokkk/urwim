@@ -3,7 +3,8 @@
 from unittest import TestCase
 from unittest.mock import Mock
 
-from urwim.command_panel import *
+import urwim.command_panel
+import urwim.pdb
 
 class CommandPanelTests(TestCase):
 
@@ -11,7 +12,8 @@ class CommandPanelTests(TestCase):
         self.command_handler_mock = Mock()
         self.command_handler_mock.list_commands.return_value = []
         self.return_focus_callback_mock = Mock()
-        self.sut = CommandPanel(self.command_handler_mock)
+        urwim.pdb['cmd_history'] = {}
+        self.sut = urwim.CommandPanel(self.command_handler_mock)
         self.sut.set_edit_text = Mock()
         self.sut.set_caption = Mock()
         self.sut.set_edit_pos = Mock()
