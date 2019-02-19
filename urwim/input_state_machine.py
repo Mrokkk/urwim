@@ -16,6 +16,8 @@ class InputStateMachine:
             'b': lambda: urwim.App().window.toggle_pane_view(),
             ',h': lambda: urwim.App().window.prev_tab(),
             ',l': lambda: urwim.App().window.next_tab(),
+            'n': lambda: urwim.App().command_handler('/'),
+            'N': lambda: urwim.App().command_handler('?'),
         }
         if keys_mapping is not None:
             for k, v in keys_mapping.items():

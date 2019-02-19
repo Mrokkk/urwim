@@ -46,21 +46,47 @@ class CommandHandlerTests(TestCase):
             self.command_panel_mock.error.reset_mock()
 
 
-    # TODO
-    # def test_can_seek_forward(self):
-        # list_mock = Mock()
-        # self.context.window.focus.searchable_list.return_value = list_mock
-        # self.sut('/some_string')
-        # self.context.window.focus.searchable_list.assert_called_once()
-        # list_mock.search_forward.assert_called_once_with('some_string')
+    def test_can_seek_forward(self):
+        list_mock = Mock()
+        self.window_mock.searchable_list.return_value = list_mock
+        self.sut('/some_string')
+        list_mock.search_forward.assert_called_once_with('some_string')
 
 
-    # def test_can_seek_backward(self):
-        # list_mock = Mock()
-        # self.context.window.focus.searchable_list.return_value = list_mock
-        # self.sut('?some_string')
-        # self.context.window.focus.searchable_list.assert_called_once()
-        # list_mock.search_backward.assert_called_once_with('some_string')
+    def test_can_seek_forward_same_string(self):
+        list_mock = Mock()
+        self.window_mock.searchable_list.return_value = list_mock
+        self.sut('/some_string')
+        list_mock.search_forward.assert_called_once_with('some_string')
+        list_mock.search_forward.reset_mock()
+        self.sut('/')
+        list_mock.search_forward.assert_called_once_with('some_string')
+
+
+    def test_can_seek_backward(self):
+        list_mock = Mock()
+        self.window_mock.searchable_list.return_value = list_mock
+        self.sut('?some_string')
+        list_mock.search_backward.assert_called_once_with('some_string')
+
+
+    def test_can_seek_forward_same_string(self):
+        list_mock = Mock()
+        self.window_mock.searchable_list.return_value = list_mock
+        self.sut('?some_string')
+        list_mock.search_backward.assert_called_once_with('some_string')
+        list_mock.search_backward.reset_mock()
+        self.sut('?')
+        list_mock.search_backward.assert_called_once_with('some_string')
+
+
+    def test_should_do_nothing_when_trying_to_seek_last_keyword_but_there_was_no_search(self):
+        list_mock = Mock()
+        self.window_mock.searchable_list.return_value = list_mock
+        self.sut('?')
+        self.sut('/')
+        list_mock.search_backward.assert_not_called()
+        list_mock.search_forward.assert_not_called()
 
 
     def test_can_call_mapped_commands(self):

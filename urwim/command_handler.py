@@ -27,6 +27,7 @@ class CommandHandler:
         }
         self.logger = logging.getLogger('CommandHandler')
         self._search_context = None
+        self._last_search = None
 
     def _format_arguments(self, args):
         if len(args) == 0: return ''
@@ -43,10 +44,18 @@ class CommandHandler:
         eval('self.commands.{}({})'.format(command, self._format_arguments(args)))
 
     def _search_forward_mode(self, command):
-        urwim.App().window.searchable_list().search_forward(command)
+        if command:
+            urwim.App().window.searchable_list().search_forward(command)
+            self._last_search = command
+        elif self._last_search:
+            urwim.App().window.searchable_list().search_forward(self._last_search)
 
     def _search_backward_mode(self, command):
-        urwim.App().window.searchable_list().search_backward(command)
+        if command:
+            urwim.App().window.searchable_list().search_backward(command)
+            self._last_search = command
+        elif self._last_search:
+            urwim.App().window.searchable_list().search_backward(self._last_search)
 
     def list_commands(self):
         import inspect
