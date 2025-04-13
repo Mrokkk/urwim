@@ -4,6 +4,7 @@ import functools
 import logging
 import queue
 import threading
+import urwim.app
 
 class AsyncCaller:
     '''Singleton class which executes function calls in separate thread'''
@@ -21,6 +22,7 @@ class AsyncCaller:
                     if async_job == None: break
                     try:
                         async_job()
+                        urwim.redraw()
                     except Exception as e:
                         self.error_handler(str(e))
 

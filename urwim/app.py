@@ -106,3 +106,7 @@ class App:
             App._instance = App._App(*args, **kwargs)
         return App._instance
 
+def redraw():
+    if App._instance is None: return
+    App._instance.draw_screen()
+
