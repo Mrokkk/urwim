@@ -35,6 +35,7 @@ class App:
             self._window = Window(widget, self._command_panel)
             self._sm = InputStateMachine(keys_mapping)
             self.logger = logging.getLogger('App')
+            self.exitting = False
             rdb['config'] = RdbObject(config, readonly=True)
             super().__init__(self._window,
                 palette=palette,
@@ -98,6 +99,7 @@ class App:
 
         def quit(self):
             self.logger.info('Exitting')
+            self.exitting = True
             pdb.save()
             raise urwid.ExitMainLoop()
 
@@ -107,6 +109,8 @@ class App:
         return App._instance
 
 def redraw():
-    if App._instance is None: return
-    App._instance.draw_screen()
+    app = App._instance
+    if app is None: return
+    if app.exitting: return
+    app.draw_screen()
 
